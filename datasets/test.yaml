@@ -1,0 +1,17 @@
+Name: test
+Description: test
+Documentation: test.com
+Contact: test@test.com
+ManagedBy: Kyle
+License:
+  URL: NA
+Resources:
+- Description: NA
+  ARN: kyle
+  Region: kyle
+  Type: kyle
+Added: '2025-06-03'
+Keywords:
+- test
+- test
+- test
