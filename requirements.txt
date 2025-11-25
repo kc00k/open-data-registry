@@ -1,2 +1,3 @@
 pykwalify==1.8.0
 requests==2.23.0
+PyYAML==6.0
