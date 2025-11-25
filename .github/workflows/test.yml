@@ -1,4 +1,4 @@
-name: Test Dataset Validation
+name: Test and Build
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  test-and-build:
     runs-on: ubuntu-latest
     
     steps:
@@ -20,7 +20,12 @@ jobs:
       with:
         python-version: '3.8'
     
-    - name: Install dependencies
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '14'
+    
+    - name: Install Python dependencies
       run: |
         pip install -r requirements.txt
     
@@ -29,3 +34,26 @@ jobs:
     
     - name: Run tests
       run: bash _scripts/test.sh
+    
+    - name: Clone registry browser
+      run: |
+        git clone https://github.com/awslabs/open-data-registry-browser.git
+        mkdir -p open-data-registry-browser/data-sources/awslabs-open-data-registry
+        cp -R datasets open-data-registry-browser/data-sources/awslabs-open-data-registry/
+    
+    - name: Install Node.js dependencies
+      run: |
+        cd open-data-registry-browser
+        npm install
+    
+    - name: Build registry browser
+      run: |
+        cd open-data-registry-browser
+        BASE_URL=https://registry.opendata.aws npm run build
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: registry-browser-build
+        path: open-data-registry-browser/dist/
+        retention-days: 7
